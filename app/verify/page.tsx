@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { getQuestions, checkQuizStatus, verifyWhitelist } from '@/lib/api';
 
-export default function VerifyPage() {
+function VerifyContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -104,5 +104,24 @@ export default function VerifyPage() {
         </CardContent>
       </Card>
     </main>
+  );
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen animated-gradient flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardContent className="text-center py-8">
+            <div className="flex flex-col items-center gap-4">
+              <div className="spinner" />
+              <p>正在验证...</p>
+            </div>
+          </CardContent>
+        </Card>
+      </main>
+    }>
+      <VerifyContent />
+    </Suspense>
   );
 }

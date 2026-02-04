@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,7 +21,7 @@ import { XCircle } from 'lucide-react';
 import { getQuestions, submitQuiz } from '@/lib/api';
 import type { Question } from '@/lib/types';
 
-export default function QuizPage() {
+function QuizContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -224,5 +224,17 @@ export default function QuizPage() {
         </AlertDialogContent>
       </AlertDialog>
     </main>
+  );
+}
+
+export default function QuizPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen animated-gradient flex items-center justify-center">
+        <div className="spinner" />
+      </main>
+    }>
+      <QuizContent />
+    </Suspense>
   );
 }
