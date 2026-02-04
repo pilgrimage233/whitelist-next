@@ -9,6 +9,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -21,8 +22,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { RefreshCw, ArrowLeft, User, Loader2, XCircle, Server, Clock } from 'lucide-react';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card';
+import { RefreshCw, ArrowLeft, User, Loader2, XCircle, Server, Clock, FileText } from 'lucide-react';
 import { getWhiteList, getOnlinePlayers, checkMemberDetail } from '@/lib/api';
+import { SkinViewer } from '@/components/SkinViewer';
+import { SkinViewerDialog } from '@/components/SkinViewerDialog';
+import { QuizDetailDialog } from '@/components/QuizDetailDialog';
 
 export default function MembersPage() {
   const router = useRouter();
@@ -35,10 +44,30 @@ export default function MembersPage() {
   const [detailLoading, setDetailLoading] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const [quizDialogOpen, setQuizDialogOpen] = useState(false);
+  const [currentQuizId, setCurrentQuizId] = useState<string | null>(null);
+  const [skinDialogOpen, setSkinDialogOpen] = useState(false);
+  const [currentSkinUsername, setCurrentSkinUsername] = useState<string>('');
 
   const showAlert = (message: string) => {
     setAlertMessage(message);
     setAlertOpen(true);
+  };
+
+  const handleViewQuizDetail = () => {
+    if (!memberDetail) return;
+    const quizId = memberDetail['答题ID'] || memberDetail['quizId'] || memberDetail['答题编号'];
+    if (quizId) {
+      setCurrentQuizId(quizId);
+      setQuizDialogOpen(true);
+    } else {
+      showAlert('未找到答题ID');
+    }
+  };
+
+  const handleSkinClick = (username: string) => {
+    setCurrentSkinUsername(username);
+    setSkinDialogOpen(true);
   };
 
   const fetchData = async () => {
@@ -192,7 +221,7 @@ export default function MembersPage() {
 
       {/* 成员详情 Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto overflow-x-visible">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-3 text-xl">
               <User className="h-5 w-5" />
@@ -208,21 +237,110 @@ export default function MembersPage() {
               <p className="text-sm text-gray-500">加载中...</p>
             </div>
           ) : memberDetail ? (
-            <div className="space-y-2">
-              {Object.entries(memberDetail).map(([key, value], index) => (
-                <div 
-                  key={key} 
-                  className="flex justify-between items-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl hover-lift border border-blue-100 dark:border-blue-800/30 slide-in"
-                  style={{ animationDelay: `${index * 0.05}s` }}
-                >
-                  <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">{key}</span>
-                  <span className="text-sm font-bold text-gray-900 dark:text-gray-100">{String(value)}</span>
-                </div>
-              ))}
-            </div>
+            <>
+              <div className="space-y-2">
+                {Object.entries(memberDetail).map(([key, value], index) => {
+                  // 如果是游戏ID且是正版账号，显示皮肤预览（悬停+点击）
+                  if (key === '游戏ID' && memberDetail['账号类型'] === '正版') {
+                    return (
+                      <div 
+                        key={key} 
+                        className="flex justify-between items-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl hover-lift border border-blue-100 dark:border-blue-800/30 slide-in"
+                        style={{ animationDelay: `${index * 0.05}s` }}
+                      >
+                        <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">{key}</span>
+                        <HoverCard openDelay={200}>
+                          <HoverCardTrigger asChild>
+                            <span 
+                              className="text-sm font-bold text-yellow-600 dark:text-yellow-400 cursor-pointer hover:text-yellow-700 dark:hover:text-yellow-300 underline decoration-dotted underline-offset-4"
+                              onClick={() => handleSkinClick(String(value))}
+                            >
+                              {String(value)}
+                            </span>
+                          </HoverCardTrigger>
+                          <HoverCardContent side="right" className="w-auto p-2">
+                            <SkinViewer username={String(value)} width={150} height={200} />
+                          </HoverCardContent>
+                        </HoverCard>
+                      </div>
+                    );
+                  }
+
+                  // QQ号显示头像（悬停）
+                  if (key === 'QQ号') {
+                    return (
+                      <div 
+                        key={key} 
+                        className="flex justify-between items-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl hover-lift border border-blue-100 dark:border-blue-800/30 slide-in"
+                        style={{ animationDelay: `${index * 0.05}s` }}
+                      >
+                        <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">{key}</span>
+                        <HoverCard openDelay={200}>
+                          <HoverCardTrigger asChild>
+                            <span className="text-sm font-bold text-blue-600 dark:text-blue-400 cursor-pointer hover:text-blue-700 dark:hover:text-blue-300 underline decoration-dotted underline-offset-4">
+                              {String(value)}
+                            </span>
+                          </HoverCardTrigger>
+                          <HoverCardContent side="right" className="w-auto p-2">
+                            <img
+                              src={`https://q1.qlogo.cn/g?b=qq&nk=${value}&s=640`}
+                              alt={`QQ: ${value}`}
+                              className="w-32 h-32 rounded-lg shadow-lg"
+                            />
+                          </HoverCardContent>
+                        </HoverCard>
+                      </div>
+                    );
+                  }
+
+                  // 普通字段
+                  return (
+                    <div 
+                      key={key} 
+                      className="flex justify-between items-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl hover-lift border border-blue-100 dark:border-blue-800/30 slide-in"
+                      style={{ animationDelay: `${index * 0.05}s` }}
+                    >
+                      <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">{key}</span>
+                      <span className={`text-sm font-bold ${
+                        key === '审核状态' ? 'text-green-600 dark:text-green-400' :
+                        key === '账号类型' && value === '正版' ? 'text-yellow-600 dark:text-yellow-400' :
+                        'text-gray-900 dark:text-gray-100'
+                      }`}>
+                        {String(value)}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+              {memberDetail['答题ID'] && (
+                <DialogFooter className="mt-4">
+                  <Button
+                    onClick={handleViewQuizDetail}
+                    className="w-full"
+                  >
+                    <FileText className="mr-2 h-4 w-4" />
+                    查看答题详情
+                  </Button>
+                </DialogFooter>
+              )}
+            </>
           ) : null}
         </DialogContent>
       </Dialog>
+
+      {/* 答题详情 Dialog */}
+      <QuizDetailDialog
+        open={quizDialogOpen}
+        onOpenChange={setQuizDialogOpen}
+        quizId={currentQuizId}
+      />
+
+      {/* 皮肤预览大弹窗 */}
+      <SkinViewerDialog
+        open={skinDialogOpen}
+        onOpenChange={setSkinDialogOpen}
+        username={currentSkinUsername}
+      />
 
       {/* Alert Dialog */}
       <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>

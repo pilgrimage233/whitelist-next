@@ -37,3 +37,10 @@ export function checkQuizStatus(code: string) {
     params: { code }
   }) as Promise<{ msg: string }>;
 }
+
+/**
+ * 获取答题详情
+ */
+export function getQuizDetail(quizId: string) {
+  return request.get(`/api/v1/getQuizDetail/${quizId}`) as Promise<{ data: any }>;
+}

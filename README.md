@@ -99,9 +99,10 @@ npm start
 - ✅ 问卷答题系统
 - ✅ 暗色模式支持
 - ✅ 响应式设计
+- ✅ 皮肤预览功能（使用 skinview3d）
+- ✅ 答题详情查看
 
 ### 待实现（可选）
-- ⏳ 皮肤预览功能
 - ⏳ 多主题切换
 - ⏳ 国际化支持
 
@@ -135,6 +136,21 @@ GET /api/v1/getQuestions?code={code}
 ### 提交问卷
 ```
 POST /api/v1/submitQuiz
+```
+
+### 获取答题详情
+```
+GET /api/v1/getQuizDetail/{quizId}
+```
+
+### 获取玩家皮肤数据
+```
+GET /mojang/user/{username}
+```
+
+### 获取皮肤纹理
+```
+GET /mojang/texture?url={textureUrl}
 ```
 
 ## 部署

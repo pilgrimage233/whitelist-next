@@ -9,6 +9,14 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      zIndex: {
+        '60': '60',
+        '70': '70',
+        '80': '80',
+        '90': '90',
+        '100': '100',
+        '9999': '9999',
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
