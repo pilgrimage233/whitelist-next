@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import {useEffect, useState} from 'react';
+import {useRouter} from 'next/navigation';
+import {Button} from '@/components/ui/button';
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
+import {Badge} from '@/components/ui/badge';
 import {
   Dialog,
   DialogContent,
@@ -22,16 +22,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card';
-import { RefreshCw, ArrowLeft, User, Loader2, XCircle, Server, Clock, FileText } from 'lucide-react';
-import { getWhiteList, getOnlinePlayers, checkMemberDetail } from '@/lib/api';
-import { SkinViewer } from '@/components/SkinViewer';
-import { SkinViewerDialog } from '@/components/SkinViewerDialog';
-import { QuizDetailDialog } from '@/components/QuizDetailDialog';
+import {HoverCard, HoverCardContent, HoverCardTrigger,} from '@/components/ui/hover-card';
+import {ArrowLeft, Clock, FileText, Loader2, RefreshCw, Server, User, XCircle} from 'lucide-react';
+import {checkMemberDetail, getOnlinePlayers, getWhiteList} from '@/lib/api';
+import {SkinViewer} from '@/components/SkinViewer';
+import {SkinViewerDialog} from '@/components/SkinViewerDialog';
+import {QuizDetailDialog} from '@/components/QuizDetailDialog';
+import {Navbar} from '@/components/Navbar';
 
 export default function MembersPage() {
   const router = useRouter();
@@ -145,39 +142,37 @@ export default function MembersPage() {
 
   return (
     <main className="min-h-screen animated-gradient p-4 pt-20">
+      <Navbar
+          rightButtons={
+            <>
+              <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={fetchData}
+              >
+                <RefreshCw className="mr-2 h-4 w-4"/>
+                刷新
+              </Button>
+              <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => router.push('/')}
+              >
+                <ArrowLeft className="mr-2 h-4 w-4"/>
+                返回
+              </Button>
+            </>
+          }
+      />
       <div className="max-w-5xl mx-auto">
         <Card className="hover-lift shadow-lg fade-in">
           <CardHeader>
-            <div className="flex justify-between items-center flex-wrap gap-4">
-              <CardTitle className="text-2xl font-bold gradient-text flex items-center gap-3">
-                <User className="h-6 w-6" />
-                白名单成员
-              </CardTitle>
-              <div className="flex gap-2">
-                <Button 
-                  size="sm" 
-                  variant="outline" 
-                  onClick={fetchData}
-                >
-                  <RefreshCw className="mr-2 h-4 w-4" />
-                  刷新
-                </Button>
-                <Button 
-                  size="sm" 
-                  variant="outline" 
-                  onClick={() => router.push('/')}
-                >
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  返回
-                </Button>
-              </div>
-            </div>
+            <CardTitle className="text-2xl font-bold gradient-text flex items-center gap-3">
+              <User className="h-6 w-6"/>
+              白名单成员
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <p className="text-sm text-muted-foreground bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-l-4 border-blue-500">
-              💡 以下是已通过白名单审核的玩家列表，点击玩家名称查看详情
-            </p>
-
             {Object.entries(whitelistData).map(([server, members], index) => (
               <div key={server} className="space-y-3 slide-in" style={{ animationDelay: `${index * 0.1}s` }}>
                 <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800/30">

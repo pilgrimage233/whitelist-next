@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import {useState} from 'react';
+import {useRouter} from 'next/navigation';
+import {Button} from '@/components/ui/button';
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
+import {Input} from '@/components/ui/input';
+import {Label} from '@/components/ui/label';
+import {Textarea} from '@/components/ui/textarea';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,9 +16,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { ArrowLeft, RefreshCw, CheckCircle2, XCircle, Edit, Mail } from 'lucide-react';
-import { requestChangeId, confirmChangeId } from '@/lib/api';
-import type { ChangeIdRequest } from '@/lib/api';
+import {ArrowLeft, CheckCircle2, Edit, Mail, RefreshCw, XCircle} from 'lucide-react';
+import type {ChangeIdRequest} from '@/lib/api';
+import {confirmChangeId, requestChangeId} from '@/lib/api';
+import {Navbar} from '@/components/Navbar';
 
 export default function ChangeIdPage() {
   const router = useRouter();
@@ -152,24 +153,24 @@ export default function ChangeIdPage() {
 
   return (
     <main className="min-h-screen animated-gradient p-4 pt-20">
+      <Navbar
+          rightButtons={
+            <Button variant="outline" size="sm" onClick={() => router.push('/')}>
+              <ArrowLeft className="mr-2 h-4 w-4"/>
+              返回
+            </Button>
+          }
+      />
       <div className="max-w-2xl mx-auto">
         <Card className="hover-lift shadow-lg fade-in">
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-2xl font-bold gradient-text flex items-center gap-2">
-                  <Edit className="h-6 w-6" />
-                  更改白名单游戏ID
-                </CardTitle>
-                <CardDescription className="mt-2">
-                  通过邮箱验证安全地更改您的游戏ID
-                </CardDescription>
-              </div>
-              <Button variant="outline" size="sm" onClick={() => router.push('/')}>
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                返回
-              </Button>
-            </div>
+            <CardTitle className="text-2xl font-bold gradient-text flex items-center gap-2">
+              <Edit className="h-6 w-6"/>
+              更改白名单游戏ID
+            </CardTitle>
+            <CardDescription className="mt-2">
+              通过邮箱验证安全地更改您的游戏ID
+            </CardDescription>
           </CardHeader>
 
           <CardContent>

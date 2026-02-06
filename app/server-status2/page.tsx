@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import {useEffect, useState} from 'react';
+import {useRouter} from 'next/navigation';
+import {Button} from '@/components/ui/button';
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
+import {Badge} from '@/components/ui/badge';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,9 +14,24 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { ArrowLeft, RefreshCw, Server, Copy, Loader2, Network, Cpu, Timer, Activity, XCircle, CheckCircle2, User, Clock } from 'lucide-react';
-import { getServerStatus } from '@/lib/api';
-import type { ServerDetail } from '@/lib/api';
+import {
+  Activity,
+  ArrowLeft,
+  CheckCircle2,
+  Clock,
+  Copy,
+  Cpu,
+  Loader2,
+  Network,
+  RefreshCw,
+  Server,
+  Timer,
+  User,
+  XCircle
+} from 'lucide-react';
+import type {ServerDetail} from '@/lib/api';
+import {getServerStatus} from '@/lib/api';
+import {Navbar} from '@/components/Navbar';
 
 export default function ServerStatus2Page() {
   const router = useRouter();
@@ -91,25 +106,25 @@ export default function ServerStatus2Page() {
 
   return (
     <main className="min-h-screen animated-gradient p-4 pt-20">
+      <Navbar
+          rightButtons={
+            <>
+              <Button variant="outline" onClick={() => router.back()}>
+                <ArrowLeft className="mr-2 h-4 w-4"/>
+                返回
+              </Button>
+              <Button onClick={fetchServerStatus} disabled={loading}>
+                <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`}/>
+                刷新
+              </Button>
+            </>
+          }
+      />
       <div className="max-w-6xl mx-auto">
-        <div className="mb-6 flex items-center justify-between flex-wrap gap-4 fade-in">
-          <Button variant="outline" onClick={() => router.back()}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            返回
-          </Button>
-          <h1 className="text-3xl font-bold gradient-text flex items-center gap-3">
-            <Server className="h-7 w-7" />
-            服务器详情
-          </h1>
-          <Button onClick={fetchServerStatus} disabled={loading}>
-            <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-            刷新
-          </Button>
-        </div>
-
-        <p className="text-center text-sm text-muted-foreground mb-6 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border-l-4 border-blue-500 fade-in">
-          💡 以下为当前公开可查询的服务器运行状态。
-        </p>
+        <h1 className="text-3xl font-bold gradient-text flex items-center justify-center gap-3 mb-6 fade-in">
+          <Server className="h-7 w-7"/>
+          服务器详情
+        </h1>
 
         {servers.length === 0 ? (
           <Card className="shadow-lg">

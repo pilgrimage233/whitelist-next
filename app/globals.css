@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --theme-gradient: linear-gradient(-45deg, #e0e0ff, #ffd6e7, #ffdfd0, #fff4d1, #d4ffe6, #cce9ff, #f0e6ff, #ffe6f0, #ffe6e6);
+    --theme-gradient: linear-gradient(-45deg, #e0e7ff, #fce7f3, #ddd6fe, #fef3c7, #d1fae5, #dbeafe);
   --theme-bg: rgba(255, 255, 255, 0.92);
   --theme-text: #303133;
-  --theme-primary: #409EFF;
-  --theme-secondary: #67C23A;
-  --theme-border: rgba(64, 158, 255, 0.2);
-  --theme-primary-rgb: 64, 158, 255;
-  --theme-secondary-rgb: 103, 194, 58;
+    --theme-primary: #667eea;
+    --theme-secondary: #764ba2;
+    --theme-border: rgba(102, 126, 234, 0.2);
+    --theme-primary-rgb: 102, 126, 234;
+    --theme-secondary-rgb: 118, 75, 162;
   --radius: 0.625rem;
   --background: 0 0% 100%;
   --foreground: 0 0% 3.9%;
@@ -39,7 +39,7 @@
 }
 
 .dark {
-  --theme-gradient: linear-gradient(-45deg, #1a1a2e, #2d1b3d, #1f2937, #1e3a3a, #1a2e1a, #1a2a3a, #2a1a3a, #3a1a2a, #2a1a1a);
+    --theme-gradient: linear-gradient(-45deg, #434343, #000000, #2c3e50, #34495e, #1a1a2e, #16213e);
   --theme-bg: rgba(30, 30, 40, 0.92);
   --theme-text: #e5e7eb;
   --theme-primary: #60a5fa;
@@ -71,6 +71,150 @@
   --chart-3: 30 80% 55%;
   --chart-4: 280 65% 60%;
   --chart-5: 340 75% 55%;
+}
+
+/* Ocean Theme - 海洋主题 */
+.ocean {
+    --theme-gradient: linear-gradient(-45deg, #e0f2fe, #cffafe, #bae6fd, #a5f3fc, #dbeafe, #e0f2fe);
+    --theme-bg: rgba(240, 249, 255, 0.92);
+    --theme-text: #0c4a6e;
+    --theme-primary: #0891b2;
+    --theme-secondary: #06b6d4;
+    --theme-border: rgba(8, 145, 178, 0.2);
+    --theme-primary-rgb: 8, 145, 178;
+    --theme-secondary-rgb: 6, 182, 212;
+    --background: 197 71% 97%;
+    --foreground: 197 100% 22%;
+    --card: 197 71% 97%;
+    --card-foreground: 197 100% 22%;
+    --popover: 197 71% 97%;
+    --popover-foreground: 197 100% 22%;
+    --primary: 188 94% 37%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 187 92% 43%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 197 50% 90%;
+    --muted-foreground: 197 30% 40%;
+    --accent: 187 92% 43%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 197 50% 85%;
+    --input: 197 50% 85%;
+    --ring: 188 94% 37%;
+    --chart-1: 188 94% 37%;
+    --chart-2: 187 92% 43%;
+    --chart-3: 186 94% 50%;
+    --chart-4: 184 77% 60%;
+    --chart-5: 183 100% 70%;
+}
+
+/* Sunset Theme - 日落主题 */
+.sunset {
+    --theme-gradient: linear-gradient(-45deg, #fed7aa, #fecaca, #fde68a, #fef3c7, #fce7f3, #fbcfe8);
+    --theme-bg: rgba(255, 251, 235, 0.92);
+    --theme-text: #7c2d12;
+    --theme-primary: #f5576c;
+    --theme-secondary: #f093fb;
+    --theme-border: rgba(245, 87, 108, 0.2);
+    --theme-primary-rgb: 245, 87, 108;
+    --theme-secondary-rgb: 240, 147, 251;
+    --background: 33 100% 97%;
+    --foreground: 20 100% 28%;
+    --card: 33 100% 97%;
+    --card-foreground: 20 100% 28%;
+    --popover: 33 100% 97%;
+    --popover-foreground: 20 100% 28%;
+    --primary: 351 89% 64%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 291 95% 80%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 33 100% 90%;
+    --muted-foreground: 20 60% 40%;
+    --accent: 351 89% 64%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 33 100% 85%;
+    --input: 33 100% 85%;
+    --ring: 351 89% 64%;
+    --chart-1: 351 89% 64%;
+    --chart-2: 291 95% 80%;
+    --chart-3: 20 91% 48%;
+    --chart-4: 17 88% 40%;
+    --chart-5: 12 76% 61%;
+}
+
+/* Forest Theme - 森林主题 */
+.forest {
+    --theme-gradient: linear-gradient(-45deg, #d1fae5, #bbf7d0, #dcfce7, #d9f99d, #d1fae5, #bbf7d0);
+    --theme-bg: rgba(240, 253, 244, 0.92);
+    --theme-text: #14532d;
+    --theme-primary: #16a34a;
+    --theme-secondary: #22c55e;
+    --theme-border: rgba(22, 163, 74, 0.2);
+    --theme-primary-rgb: 22, 163, 74;
+    --theme-secondary-rgb: 34, 197, 94;
+    --background: 138 76% 97%;
+    --foreground: 140 100% 20%;
+    --card: 138 76% 97%;
+    --card-foreground: 140 100% 20%;
+    --popover: 138 76% 97%;
+    --popover-foreground: 140 100% 20%;
+    --primary: 142 76% 36%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 142 71% 45%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 138 76% 90%;
+    --muted-foreground: 140 60% 35%;
+    --accent: 142 71% 45%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 138 76% 85%;
+    --input: 138 76% 85%;
+    --ring: 142 76% 36%;
+    --chart-1: 142 76% 36%;
+    --chart-2: 142 71% 45%;
+    --chart-3: 141 77% 55%;
+    --chart-4: 140 84% 65%;
+    --chart-5: 138 76% 75%;
+}
+
+/* Pink Theme - 粉色主题 */
+.pink {
+    --theme-gradient: linear-gradient(-45deg, #fce7f3, #fbcfe8, #f9a8d4, #fae8ff, #fce7f3, #fbcfe8);
+    --theme-bg: rgba(255, 241, 242, 0.92);
+    --theme-text: #831843;
+    --theme-primary: #d57eeb;
+    --theme-secondary: #f093fb;
+    --theme-border: rgba(213, 126, 235, 0.2);
+    --theme-primary-rgb: 213, 126, 235;
+    --theme-secondary-rgb: 240, 147, 251;
+    --background: 326 100% 98%;
+    --foreground: 330 100% 32%;
+    --card: 326 100% 98%;
+    --card-foreground: 330 100% 32%;
+    --popover: 326 100% 98%;
+    --popover-foreground: 330 100% 32%;
+    --primary: 291 95% 73%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 291 95% 80%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 326 100% 92%;
+    --muted-foreground: 330 60% 40%;
+    --accent: 291 95% 80%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 326 100% 88%;
+    --input: 326 100% 88%;
+    --ring: 291 95% 73%;
+    --chart-1: 291 95% 73%;
+    --chart-2: 291 95% 80%;
+    --chart-3: 326 77% 65%;
+    --chart-4: 330 81% 60%;
+    --chart-5: 338 100% 88%;
 }
 
 * {

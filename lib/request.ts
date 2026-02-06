@@ -1,4 +1,4 @@
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import axios, {AxiosError, InternalAxiosRequestConfig} from 'axios';
 import CryptoJS from 'crypto-js';
 
 export interface ApiResponse<T = any> {
@@ -7,8 +7,13 @@ export interface ApiResponse<T = any> {
   msg?: string;
 }
 
+// 在生产环境使用代理，开发环境直接请求
+const baseURL = typeof window !== 'undefined' && process.env.NODE_ENV === 'production'
+    ? '/api/proxy'  // 浏览器端生产环境使用代理
+    : process.env.NEXT_PUBLIC_API_URL;  // 开发环境或服务端直接请求
+
 const request = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+    baseURL,
   timeout: 8000,
 });
 

@@ -1,14 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Badge } from '@/components/ui/badge';
+import {useEffect, useState} from 'react';
+import {useRouter} from 'next/navigation';
+import {Button} from '@/components/ui/button';
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
+import {Input} from '@/components/ui/input';
+import {Label} from '@/components/ui/label';
+import {Textarea} from '@/components/ui/textarea';
+import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
+import {Badge} from '@/components/ui/badge';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,9 +18,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Users, RefreshCw, Server, User, Clock, ArrowRight, Activity, CheckCircle2, XCircle, Edit } from 'lucide-react';
-import { applyWhitelist, getOnlinePlayers } from '@/lib/api';
-import type { WhitelistForm } from '@/lib/api';
+import {Activity, ArrowRight, CheckCircle2, Clock, Edit, RefreshCw, Server, User, Users, XCircle} from 'lucide-react';
+import type {WhitelistForm} from '@/lib/api';
+import {applyWhitelist, getOnlinePlayers} from '@/lib/api';
+import {Navbar} from '@/components/Navbar';
 
 interface ServerStatus {
   name: string;
@@ -125,13 +126,9 @@ export default function Home() {
   return (
     <main className="min-h-screen animated-gradient flex items-center justify-center p-4 relative overflow-hidden">
       {/* 顶部导航栏 */}
-      <nav className="fixed top-0 left-0 right-0 z-20 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2 fade-in">
-            <Server className="h-5 w-5 text-blue-500 dark:text-blue-400" />
-            <span className="font-bold text-lg gradient-text">白名单系统</span>
-          </div>
-          <div className="flex items-center gap-2">
+      <Navbar
+          rightButtons={
+            <>
             <Button 
               variant="ghost" 
               size="sm" 
@@ -159,9 +156,9 @@ export default function Home() {
               <Activity className="h-4 w-4" />
               <span className="hidden sm:inline">服务器信息</span>
             </Button>
-          </div>
-        </div>
-      </nav>
+            </>
+          }
+      />
 
       {/* 右上角服务器状态 - 仅在桌面端显示 */}
       <div className="hidden lg:block fixed top-24 right-5 w-80 z-10 fade-in">
