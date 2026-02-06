@@ -27,6 +27,19 @@ export interface ServerDetail {
 }
 
 /**
+ * 玩家服务器信息
+ */
+export interface PlayerServerInfo {
+  status: string;
+  nameTag: string;
+  version: string;
+  ip: string;
+  port: string;
+  core: string;
+  up_time: string;
+}
+
+/**
  * 获取在线玩家信息
  */
 export function getOnlinePlayers() {
@@ -40,4 +53,11 @@ export function getServerStatus() {
   return request.get('/api/v1/getServerStatus', {
     timeout: 20000, // 20秒超时
   });
+}
+
+/**
+ * 根据游戏ID获取服务器信息
+ */
+export function getPlayerServers(gameId: string) {
+  return request.get(`/api/v1/getServerInfoByGameId/${gameId}`);
 }

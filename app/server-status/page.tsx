@@ -1,35 +1,30 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { ArrowLeft, RefreshCw, Server, User, Clock, Loader2, XCircle } from 'lucide-react';
-import { getOnlinePlayers } from '@/lib/api';
-import type { ServerStatus } from '@/lib/api';
+import {useEffect, useState} from 'react';
+import {useRouter} from 'next/navigation';
+import {Button} from '@/components/ui/button';
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
+import {Badge} from '@/components/ui/badge';
+import {Progress} from '@/components/ui/progress';
+import {Clock, Globe, Loader2, RefreshCw, Users} from 'lucide-react';
+import {getOnlinePlayers} from '@/lib/api';
+import {Navbar} from '@/components/Navbar';
+
+// Define locally if not exported handy, or assume structure matches API
+interface ServerStatus {
+    name: string;
+    playerCount: number;
+    players: string[];
+}
 
 export default function ServerStatusPage() {
   const router = useRouter();
   const [servers, setServers] = useState<ServerStatus[]>([]);
   const [queryTime, setQueryTime] = useState('-');
   const [loading, setLoading] = useState(false);
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
 
-  const showAlert = (message: string) => {
-    setAlertMessage(message);
-    setAlertOpen(true);
-  };
+    // No complex logic for alerts needed if we just show state
+    // const [alertOpen, setAlertOpen] = useState(false);
 
   const refreshStatus = async () => {
     setLoading(true);
@@ -56,7 +51,7 @@ export default function ServerStatusPage() {
 
         serverList.push({
           name: serverName,
-          playerCount: serverData['在线人数'],
+            playerCount: Number(serverData['在线人数']) || 0,
           players: players,
         });
       });
@@ -64,7 +59,6 @@ export default function ServerStatusPage() {
       setServers(serverList);
     } catch (error: any) {
       console.error('Failed to fetch server status:', error);
-      showAlert(error.message || '获取服务器状态失败');
     } finally {
       setLoading(false);
     }
@@ -74,107 +68,101 @@ export default function ServerStatusPage() {
     refreshStatus();
   }, []);
 
-  if (loading && servers.length === 0) {
-    return (
-      <main className="min-h-screen animated-gradient flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <Loader2 className="h-12 w-12 animate-spin text-blue-500 mx-auto" />
-          <p className="text-gray-600 dark:text-gray-400">加载中...</p>
-        </div>
-      </main>
-    );
-  }
-
   return (
-    <main className="min-h-screen animated-gradient p-4 pt-20">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-6 flex items-center justify-between flex-wrap gap-4 fade-in">
-          <Button variant="outline" onClick={() => router.push('/')}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            返回
-          </Button>
-          <h1 className="text-3xl font-bold gradient-text flex items-center gap-3">
-            <Server className="h-7 w-7" />
-            服务器状态
-          </h1>
-          <Button onClick={refreshStatus} disabled={loading}>
-            <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-            刷新
-          </Button>
-        </div>
+      <main className="min-h-screen bg-background relative selection:bg-indigo-500/30">
+          <Navbar/>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {servers.map((server, index) => (
-            <Card 
-              key={server.name} 
-              className="hover-lift shadow-lg slide-in"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Server className="h-5 w-5 text-blue-500 dark:text-blue-400" />
-                    {server.name}
-                  </CardTitle>
-                  <Badge variant="outline" className="flex items-center gap-1 font-semibold">
-                    <User className="h-3 w-3" />
-                    {server.playerCount}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {server.players.length > 0 ? (
-                  <div className="space-y-3">
-                    <div className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1 font-medium">
-                      <User className="h-4 w-4" />
-                      在线玩家:
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {server.players.map((player) => (
-                        <Badge 
-                          key={player} 
-                          className="bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700 text-white transition-all hover:scale-110 pulse-glow"
-                        >
-                          {player}
-                        </Badge>
+          <div className="container mx-auto px-4 pt-24 pb-12">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 animate-in-up">
+                  <div className="space-y-1 text-center md:text-left">
+                      <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-cyan-500">
+                          服务状态概览
+                      </h1>
+                      <p className="text-muted-foreground flex items-center justify-center md:justify-start gap-2">
+                          <Clock className="w-4 h-4"/>
+                          上次更新: {queryTime}
+                      </p>
+                  </div>
+                  <Button variant="outline" onClick={refreshStatus} className="group" disabled={loading}>
+                      <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`}/>
+                      刷新状态
+                  </Button>
+              </div>
+
+              {loading && servers.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-64 space-y-4">
+                      <Loader2 className="h-10 w-10 animate-spin text-primary"/>
+                      <p className="text-muted-foreground">正在获取服务器数据...</p>
+                  </div>
+              ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
+                      {servers.map((server, index) => (
+                          <Card
+                              key={server.name}
+                              className={`border-indigo-500/20 shadow-lg shadow-indigo-500/5 bg-white/60 dark:bg-zinc-900/60 backdrop-blur-md animate-in-up`}
+                              style={{animationDelay: `${index * 100}ms`}}
+                          >
+                              <CardHeader className="pb-2">
+                                  <div className="flex justify-between items-center">
+                                      <CardTitle className="flex items-center gap-2 text-xl truncate"
+                                                 title={server.name}>
+                                          <Globe className="w-5 h-5 text-indigo-500"/>
+                                          {server.name}
+                                      </CardTitle>
+                                      <Badge variant="outline"
+                                             className="bg-green-500/10 text-green-600 border-green-500/20 px-3 py-1">
+                                          <span className="w-2 h-2 rounded-full bg-green-500 mr-2"/>
+                                          在线
+                                      </Badge>
+                                  </div>
+                              </CardHeader>
+                              <CardContent className="space-y-6 pt-4">
+                                  <div
+                                      className="space-y-2 p-4 rounded-lg bg-indigo-50/50 dark:bg-indigo-900/10 border border-indigo-100 dark:border-indigo-900/30">
+                                      <div
+                                          className="flex items-center justify-between text-sm text-muted-foreground mb-1">
+                                          <div className="flex items-center">
+                                              <Users className="w-4 h-4 mr-2"/> 在线玩家
+                                          </div>
+                                          <span
+                                              className="font-bold text-foreground text-lg">{server.playerCount}</span>
+                                      </div>
+                                      {/* Mock progress bar as max players isn't always available, assuming 100 as base or just visual */}
+                                      <Progress value={Math.min((server.playerCount / 50) * 100, 100)} className="h-1.5"
+                                                indicatorClassName="bg-indigo-500"/>
+                                  </div>
+
+                                  {server.players.length > 0 && (
+                                      <div className="space-y-2">
+                                          <div className="text-sm font-medium text-muted-foreground">玩家列表:</div>
+                                          <div className="flex flex-wrap gap-2">
+                                              {server.players.map(player => (
+                                                  <Badge key={player} variant="secondary"
+                                                         className="hover:bg-primary/10">
+                                                      {player}
+                                                  </Badge>
+                                              ))}
+                                          </div>
+                                      </div>
+                                  )}
+
+                                  {server.players.length === 0 && server.playerCount > 0 && (
+                                      <div className="text-sm text-muted-foreground italic text-center py-2">
+                                          玩家名单隐藏或获取失败
+                                      </div>
+                                  )}
+
+                                  {server.playerCount === 0 && (
+                                      <div className="text-sm text-muted-foreground italic text-center py-2">
+                                          当前空闲
+                                      </div>
+                                  )}
+                              </CardContent>
+                          </Card>
                       ))}
-                    </div>
                   </div>
-                ) : (
-                  <div className="text-sm text-gray-500 dark:text-gray-400 text-center py-6 italic">
-                    暂无在线玩家
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
+              )}
         </div>
-
-        <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400 flex items-center justify-center gap-2 bg-white/50 dark:bg-gray-800/50 py-4 rounded-lg fade-in">
-          <Clock className="h-4 w-4" />
-          查询时间: {queryTime}
-        </div>
-      </div>
-
-      {/* Alert Dialog */}
-      <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <XCircle className="h-5 w-5 text-red-500" />
-              错误
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-base">
-              {alertMessage}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setAlertOpen(false)}>
-              确定
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </main>
   );
 }
