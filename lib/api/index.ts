@@ -14,3 +14,6 @@ export * from './quiz';
 
 // 更改ID相关
 export * from './changeId';
+
+// 白名单用户登录
+export * from './whitelistUser';

@@ -259,6 +259,54 @@ body {
   100% { background-position: 0% 50%; }
 }
 
+/* Auth layout helpers */
+.auth-bg {
+    background-image: radial-gradient(at 0% 0%, rgba(18, 22, 36, 1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, rgba(30, 58, 138, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(190, 24, 93, 1) 0, transparent 50%);
+}
+
+@keyframes fade-in-up {
+    0% {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@layer utilities {
+    .font-heading {
+        font-family: var(--font-outfit), sans-serif;
+    }
+
+    .font-sans {
+        font-family: var(--font-space), monospace;
+    }
+
+    .glass {
+        @apply bg-white/10 dark:bg-black/20 backdrop-blur-lg border border-white/20 dark:border-white/10 shadow-lg;
+    }
+
+    .glass-card {
+        @apply bg-card/50 dark:bg-card/40 backdrop-blur-md border border-border/50 shadow-xl dark:shadow-2xl dark:shadow-black/50;
+    }
+
+    .glass-input {
+        @apply bg-background/50 border-input/50 focus:bg-background/80 focus:border-primary/50 transition-all duration-300;
+    }
+
+    .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-400 to-purple-500;
+    }
+
+    .animate-in-up {
+        animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+}
+
 @keyframes float {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(30px, -30px) scale(1.1); }

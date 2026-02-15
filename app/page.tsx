@@ -184,19 +184,20 @@ export default function Home() {
                                           onValueChange={(value) => setForm({...form, onlineFlag: value as '0' | '1'})}
                                           className="flex gap-6"
                                       >
-                                          <div
+                                          <Label
+                                              htmlFor="online"
                                               className="flex items-center space-x-2 border rounded-lg p-3 w-full bg-white/30 dark:bg-zinc-800/30 hover:bg-white/50 dark:hover:bg-zinc-800/50 transition-colors cursor-pointer"
-                                              onClick={() => setForm({...form, onlineFlag: '1'})}>
+                                          >
                                               <RadioGroupItem value="1" id="online"/>
-                                              <Label htmlFor="online" className="cursor-pointer flex-1">正版认证</Label>
-                                          </div>
-                                          <div
+                                              <span className="flex-1">正版认证</span>
+                                          </Label>
+                                          <Label
+                                              htmlFor="offline"
                                               className="flex items-center space-x-2 border rounded-lg p-3 w-full bg-white/30 dark:bg-zinc-800/30 hover:bg-white/50 dark:hover:bg-zinc-800/50 transition-colors cursor-pointer"
-                                              onClick={() => setForm({...form, onlineFlag: '0'})}>
+                                          >
                                               <RadioGroupItem value="0" id="offline"/>
-                                              <Label htmlFor="offline"
-                                                     className="cursor-pointer flex-1">离线模式</Label>
-                                          </div>
+                                              <span className="flex-1">离线模式</span>
+                                          </Label>
                                       </RadioGroup>
                                   </div>
 

@@ -51,6 +51,9 @@ whitelist-next/
 │   ├── quiz/              # 问卷页面
 │   ├── verify/            # 验证页面
 │   ├── change-id/         # 修改 ID 页面
+│   ├── login/             # 白名单用户登录
+│   ├── profile/           # 个人资料页
+│   ├── privacy/           # 隐私设置页
 │   ├── server-status/     # 服务器状态页面
 │   ├── api/proxy/         # API 代理
 │   ├── providers.tsx      # 全局 Provider
@@ -61,7 +64,8 @@ whitelist-next/
 │   │   ├── quiz.ts        # 问卷相关 API
 │   │   ├── server.ts      # 服务器状态 API
 │   │   ├── changeId.ts    # 修改 ID API
-│   │   └── whitelist.ts   # 白名单管理 API
+│   │   ├── whitelist.ts   # 白名单管理 API
+│   │   └── whitelistUser.ts # 白名单用户登录 API
 │   ├── request.ts         # HTTP 请求封装
 │   ├── types.ts           # TypeScript 类型定义
 │   └── utils.ts           # 工具函数
@@ -90,6 +94,7 @@ NEXT_PUBLIC_API_URL=https://xxx.xx/prod-api
 NEXT_PUBLIC_SECRET_KEY=
 NEXT_PUBLIC_QQ_AVATAR_URL=https://q1.qlogo.cn/g
 NEXT_PUBLIC_DEFAULT_LOCALE=zh-CN
+NEXT_PUBLIC_APP_NAME=Whitelist
 ```
 
 ### 开发模式
@@ -112,6 +117,9 @@ npm start
 ### 已实现
 - ✅ 白名单申请表单
 - ✅ 白名单修改表单
+- ✅ 白名单用户登录
+- ✅ 个人资料与密码修改
+- ✅ 隐私设置（控制查询信息可见性）
 - ✅ 服务器状态展示
 - ✅ 成员列表展示
 - ✅ 在线状态显示
@@ -125,36 +133,17 @@ npm start
 ### 待实现（可选）
 - ⏳ 国际化支持
 
-## 主题系统 🎨
+## 页面导航
 
-本项目支持 **14 种精美主题配色**，每种主题都有浅色和深色两个版本：
-
-### 可用主题
-
-- **默认主题** - 经典蓝色，适合日常使用
-- **海洋主题** - 清爽青蓝，如海天一色
-- **日落主题** - 温暖橙红，充满活力
-- **森林主题** - 清新绿色，自然舒适
-- **紫梦主题** - 优雅紫色，梦幻浪漫
-- **玫瑰主题** - 柔美粉红，温柔浪漫
-- **赛博朋克主题** - 霓虹品红，科技未来
-
-### 主题特性
-
-- ✨ 动画渐变背景
-- 💾 自动保存偏好设置
-- 📱 响应式设计
-- ♿ 无障碍支持
-- 🎯 一键切换
-
-### 使用方法
-
-点击导航栏右上角的**调色板图标** 🎨 即可切换主题。
-
-详细文档：
-
-- [主题配色说明](THEMES.md)
-- [主题使用指南](docs/THEME_USAGE.md)
+- `/` 首页，白名单申请与服务器状态
+- `/members` 成员列表与在线状态
+- `/server-status` 服务器状态详情
+- `/quiz` 问卷入口
+- `/verify` 白名单验证页
+- `/change-id` 修改游戏ID（已登录可直接修改）
+- `/login` 白名单用户登录/注册
+- `/profile` 个人资料、登录记录、修改密码
+- `/privacy` 隐私设置（控制成员查询接口可见字段）
 
 ## API 接口
 
@@ -201,6 +190,18 @@ GET /mojang/user/{username}
 ### 获取皮肤纹理
 ```
 GET /mojang/texture?url={textureUrl}
+```
+
+### 白名单用户登录
+
+```
+POST /api/v1/whitelist-user/sendCode
+POST /api/v1/whitelist-user/register
+POST /api/v1/whitelist-user/login
+GET  /api/v1/whitelist-user/profile
+POST /api/v1/whitelist-user/changePassword
+GET  /api/v1/whitelist-user/privacy
+POST /api/v1/whitelist-user/privacy
 ```
 
 ## 部署

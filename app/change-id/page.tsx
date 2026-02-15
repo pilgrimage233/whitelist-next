@@ -1,6 +1,6 @@
 'use client';
 
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardHeader} from '@/components/ui/card';
@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import {CheckCircle2, Edit, Loader2, Mail, User, XCircle} from 'lucide-react';
 import type {ChangeIdRequest} from '@/lib/api';
-import {confirmChangeId, requestChangeId} from '@/lib/api';
+import {changeWhitelistUserGameId, confirmChangeId, getWhitelistUserProfile, requestChangeId} from '@/lib/api';
 import {Navbar} from '@/components/Navbar';
 
 export default function ChangeIdPage() {
@@ -29,6 +29,8 @@ export default function ChangeIdPage() {
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState<'success' | 'error'>('success');
+  const [loginToken, setLoginToken] = useState<string | null>(null);
+  const [loginGameId, setLoginGameId] = useState<string | null>(null);
 
   const [requestForm, setRequestForm] = useState<ChangeIdRequest>({
     oldUserName: '',
@@ -38,6 +40,29 @@ export default function ChangeIdPage() {
   });
 
   const [verifyCode, setVerifyCode] = useState('');
+
+  useEffect(() => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('whitelistUserToken') : null;
+    if (!token) {
+      return;
+    }
+    setLoginToken(token);
+    const cachedGameId = localStorage.getItem('whitelistUserGameId');
+    if (cachedGameId) {
+      setLoginGameId(cachedGameId);
+    }
+    getWhitelistUserProfile(token)
+        .then((res) => {
+          const gameId = res.data?.gameId || null;
+          if (gameId) {
+            localStorage.setItem('whitelistUserGameId', gameId);
+            setLoginGameId(gameId);
+          }
+        })
+        .catch(() => {
+          // Ignore profile fetch failures here; fallback to cached values.
+        });
+  }, []);
 
   const showAlert = (message: string, type: 'success' | 'error' = 'success') => {
     setAlertMessage(message);
@@ -135,11 +160,40 @@ export default function ChangeIdPage() {
 
   const handleReset = () => {
     setRequestForm({
-      oldUserName: '',
+      oldUserName: loginGameId || '',
       newUserName: '',
       qqNum: '',
       changeReason: '',
     });
+  };
+
+  const handleDirectChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!loginToken) {
+      showAlert('请先登录', 'error');
+      return;
+    }
+    if (!requestForm.newUserName) {
+      showAlert('请输入新的游戏ID', 'error');
+      return;
+    }
+    if (!/^[a-zA-Z0-9_]{1,35}$/.test(requestForm.newUserName)) {
+      showAlert('新游戏ID格式不正确', 'error');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await changeWhitelistUserGameId(loginToken, requestForm.newUserName, requestForm.changeReason);
+      showAlert(res.msg || '游戏ID更改成功', 'success');
+      localStorage.setItem('whitelistUserGameId', requestForm.newUserName);
+      setLoginGameId(requestForm.newUserName);
+      setStep(3);
+    } catch (error: any) {
+      showAlert(error.message || '更改失败', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleBack = () => {
@@ -151,6 +205,8 @@ export default function ChangeIdPage() {
   const handleFinish = () => {
     router.push('/');
   };
+
+  const isLoggedIn = Boolean(loginToken);
 
   return (
       <main
@@ -208,7 +264,67 @@ export default function ChangeIdPage() {
               </div>
             </CardHeader>
             <CardContent className="p-6 md:p-8">
-            {step === 1 && (
+              {step === 1 && isLoggedIn && (
+                  <form onSubmit={handleDirectChange}
+                        className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div className="rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 text-sm p-3">
+                      已登录，可直接更改游戏ID，无需验证码。
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">当前游戏ID</Label>
+                      <Input
+                          value={loginGameId || '未绑定'}
+                          disabled
+                          className="bg-white/50 dark:bg-gray-900/50"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="newUserName" className="text-sm font-medium">新游戏ID</Label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-3 h-4 w-4 text-gray-400"/>
+                        <Input
+                            id="newUserName"
+                            placeholder="请输入新的游戏ID"
+                            value={requestForm.newUserName}
+                            onChange={(e) => setRequestForm({...requestForm, newUserName: e.target.value})}
+                            maxLength={35}
+                            className="pl-9 bg-white/50 dark:bg-gray-900/50"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="changeReason" className="text-sm font-medium">更改原因（选填）</Label>
+                      <Textarea
+                          id="changeReason"
+                          placeholder="请简要说明更改原因"
+                          value={requestForm.changeReason}
+                          onChange={(e) => setRequestForm({...requestForm, changeReason: e.target.value})}
+                          maxLength={500}
+                          className="min-h-[80px] resize-none bg-white/50 dark:bg-gray-900/50"
+                      />
+                    </div>
+
+                    <div className="flex gap-4 pt-2">
+                      <Button type="button" variant="ghost" onClick={handleReset} className="w-24">
+                        重置
+                      </Button>
+                      <Button type="submit"
+                              className="flex-1 bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white shadow-md transition-all hover:shadow-lg"
+                              disabled={loading}>
+                        {loading ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+                              提交中...
+                            </>
+                        ) : (
+                            '直接更改'
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+              )}
+
+              {step === 1 && !isLoggedIn && (
                 <form onSubmit={handleRequestChange}
                       className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                 <div className="space-y-2">
