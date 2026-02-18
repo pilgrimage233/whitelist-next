@@ -95,35 +95,33 @@ export default function ServerStatus2Page() {
 
   if (loading && servers.length === 0) {
     return (
-        <main
-            className="min-h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <Loader2 className="h-12 w-12 animate-spin text-indigo-500 mx-auto"/>
-          <p className="text-gray-600 dark:text-gray-400">加载中...</p>
-        </div>
-      </main>
+        <main className="min-h-screen w-full bg-background flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto"/>
+            <p className="text-muted-foreground">加载中...</p>
+          </div>
+        </main>
     );
   }
 
   return (
-      <main
-          className="min-h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 pt-24 pb-10">
+      <main className="min-h-screen w-full bg-background relative selection:bg-primary/20">
         <Navbar/>
 
-        <div className="max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
-            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-cyan-600 flex items-center gap-3">
-              <Server className="h-8 w-8 text-indigo-600"/>
+        <div className="container mx-auto px-4 pt-24 pb-10">
+          <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 animate-in-up">
+            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary flex items-center gap-3">
+              <Server className="h-8 w-8 text-primary"/>
               服务器详情监控
             </h1>
             <div className="flex gap-3">
               <Button variant="outline" onClick={() => router.back()}
-                      className="border-indigo-200 hover:bg-indigo-50 dark:border-indigo-800 dark:hover:bg-indigo-900/20">
+                      className="border-border hover:bg-accent/60">
                 <ArrowLeft className="mr-2 h-4 w-4"/>
                 返回
               </Button>
               <Button onClick={fetchServerStatus} disabled={loading}
-                      className="bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white shadow-md">
+                      className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground shadow-md">
                 <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`}/>
                 刷新状态
               </Button>
@@ -131,8 +129,8 @@ export default function ServerStatus2Page() {
           </div>
 
         {servers.length === 0 ? (
-            <Card className="shadow-lg border-none bg-white/80 dark:bg-gray-800/80 backdrop-blur-md">
-            <CardContent className="py-20 text-center text-gray-500">
+            <Card className="shadow-lg border border-border/60 bg-card/80 backdrop-blur-md">
+            <CardContent className="py-20 text-center text-muted-foreground">
               暂无服务器数据
             </CardContent>
           </Card>
@@ -141,9 +139,12 @@ export default function ServerStatus2Page() {
             {servers.map((server, index) => (
               <Card 
                 key={`${server['连接地址']}-${server['连接端口']}-${index}`}
-                className="hover:scale-[1.02] transition-transform duration-300 shadow-xl border-none bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm overflow-hidden"
+                className="hover:scale-[1.02] transition-transform duration-300 shadow-xl border border-border/60 bg-card/80 backdrop-blur-sm overflow-hidden"
               >
-                <div className="h-2 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500"/>
+                <div
+                    className="h-2 w-full"
+                    style={{background: 'linear-gradient(90deg, var(--theme-primary), var(--theme-secondary))'}}
+                />
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between flex-wrap gap-2">
                     <div className="flex items-center gap-2">
@@ -151,23 +152,23 @@ export default function ServerStatus2Page() {
                         {getStatusText(server['在线状态'])}
                       </Badge>
                     </div>
-                    <Badge variant="outline" className="text-xs font-mono bg-gray-50 dark:bg-gray-900/50">
+                    <Badge variant="outline" className="text-xs font-mono bg-muted/40">
                       {server['版本']}
                     </Badge>
                   </div>
-                  <CardTitle className="text-lg mt-2 font-bold text-gray-900 dark:text-gray-100">
+                  <CardTitle className="text-lg mt-2 font-bold text-foreground">
                     {server['服务器名称']}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* 连接地址 */}
                   <div
-                      className="p-3 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-lg border border-indigo-100 dark:border-indigo-800/30 group">
+                      className="p-3 bg-primary/5 rounded-lg border border-primary/10 dark:border-primary/20 group">
                     <div className="flex items-start gap-2 text-sm">
-                      <Network className="h-4 w-4 mt-0.5 text-indigo-500 dark:text-indigo-400 flex-shrink-0"/>
+                      <Network className="h-4 w-4 mt-0.5 text-primary flex-shrink-0"/>
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs text-gray-500 dark:text-gray-400 mb-1 font-medium">连接地址</div>
-                        <div className="text-gray-900 dark:text-gray-100 font-mono text-xs break-all font-bold">
+                        <div className="text-xs text-muted-foreground mb-1 font-medium">连接地址</div>
+                        <div className="text-foreground font-mono text-xs break-all font-bold">
                           {server['连接地址']}:{server['连接端口']}
                         </div>
                       </div>
@@ -177,7 +178,7 @@ export default function ServerStatus2Page() {
                         className="h-7 w-7 p-0 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
                         onClick={() => copyToClipboard(`${server['连接地址']}:${server['连接端口']}`)}
                       >
-                        <Copy className="h-3 w-3 text-indigo-500"/>
+                        <Copy className="h-3 w-3 text-primary"/>
                       </Button>
                     </div>
                   </div>
@@ -186,12 +187,12 @@ export default function ServerStatus2Page() {
                   <div className="grid grid-cols-2 gap-3">
                     {/* 核心 */}
                     <div
-                        className="p-2.5 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-gray-100 dark:border-gray-700/50">
-                      <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 mb-1">
+                        className="p-2.5 bg-muted/50 rounded-lg border border-border/60">
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
                         <Cpu className="h-3.5 w-3.5"/>
                         核心
                       </div>
-                      <div className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate"
+                      <div className="text-sm font-semibold text-foreground truncate"
                            title={server['核心']}>
                         {server['核心']}
                       </div>
@@ -199,8 +200,8 @@ export default function ServerStatus2Page() {
 
                     {/* Rcon */}
                     <div
-                        className="p-2.5 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-gray-100 dark:border-gray-700/50">
-                      <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 mb-1">
+                        className="p-2.5 bg-muted/50 rounded-lg border border-border/60">
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
                         <Activity className="h-3.5 w-3.5"/>
                         Rcon
                       </div>
@@ -211,21 +212,21 @@ export default function ServerStatus2Page() {
 
                     {/* 在线人数 */}
                     <div
-                        className="p-2.5 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-gray-100 dark:border-gray-700/50">
-                      <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 mb-1">
+                        className="p-2.5 bg-muted/50 rounded-lg border border-border/60">
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
                         <User className="h-3.5 w-3.5"/>
                         在线
                       </div>
-                      <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                      <div className="text-sm font-semibold text-foreground">
                         {server['在线人数'] ?? '-'} <span
-                          className="text-gray-400 text-xs">/ {server['最大人数'] ?? '-'}</span>
+                          className="text-muted-foreground text-xs">/ {server['最大人数'] ?? '-'}</span>
                       </div>
                     </div>
 
                     {/* 延迟 */}
                     <div
-                        className="p-2.5 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-gray-100 dark:border-gray-700/50">
-                      <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 mb-1">
+                        className="p-2.5 bg-muted/50 rounded-lg border border-border/60">
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
                         <Timer className="h-3.5 w-3.5"/>
                         延迟
                       </div>
@@ -239,8 +240,8 @@ export default function ServerStatus2Page() {
 
                   {/* 指标 */}
                   <div
-                      className="flex items-center justify-between p-3 bg-cyan-50/50 dark:bg-cyan-900/10 rounded-lg border border-cyan-100 dark:border-cyan-800/30">
-                    <span className="text-xs font-medium text-gray-600 dark:text-gray-400">服务指标</span>
+                      className="flex items-center justify-between p-3 bg-secondary/10 rounded-lg border border-secondary/30">
+                    <span className="text-xs font-medium text-muted-foreground">服务指标</span>
                     <Badge variant={getIndicatorColor(server['指标']) as any} className="text-xs font-semibold">
                       {server['指标']}
                     </Badge>
@@ -252,7 +253,7 @@ export default function ServerStatus2Page() {
         )}
 
           <div
-              className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400 flex items-center justify-center gap-2 bg-white/50 dark:bg-gray-800/50 py-3 rounded-full w-fit mx-auto px-6 backdrop-blur-sm shadow-sm">
+              className="mt-8 text-center text-sm text-muted-foreground flex items-center justify-center gap-2 bg-card/70 border border-border/60 py-3 rounded-full w-fit mx-auto px-6 backdrop-blur-sm shadow-sm">
           <Clock className="h-4 w-4" />
             上次更新: {queryTime}
         </div>
