@@ -17,3 +17,6 @@ export * from './changeId';
 
 // 白名单用户登录
 export * from './whitelistUser';
+
+// 投票
+export * from './vote';

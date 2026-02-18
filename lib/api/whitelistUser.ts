@@ -19,6 +19,9 @@ export interface WhitelistUserProfile {
     userName: string;
     gameId?: string;
     qqNum: string;
+    roleLevel?: number;
+    roleTitle?: string;
+    canInitiateVote?: number;
     token: string;
     loginTime: number;
     expireTime: number;
@@ -38,6 +41,9 @@ export interface WhitelistUserMe {
     whitelistId: number;
     userName: string;
     qqNum: string;
+    roleLevel?: number;
+    roleTitle?: string;
+    canInitiateVote?: number;
     token: string;
     loginTime: number;
     expireTime: number;

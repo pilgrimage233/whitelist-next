@@ -96,6 +96,15 @@ export function Navbar({rightButtons}: NavbarProps) {
                 if (nextQqNum) {
                     localStorage.setItem('whitelistUserQqNum', nextQqNum);
                 }
+                if (profile?.roleTitle) {
+                    localStorage.setItem('whitelistUserRoleTitle', profile.roleTitle);
+                }
+                if (profile?.roleLevel !== undefined && profile?.roleLevel !== null) {
+                    localStorage.setItem('whitelistUserRoleLevel', String(profile.roleLevel));
+                }
+                if (profile?.canInitiateVote !== undefined && profile?.canInitiateVote !== null) {
+                    localStorage.setItem('whitelistUserCanInitiateVote', String(profile.canInitiateVote));
+                }
                 if (profile?.expireTime) {
                     localStorage.setItem('whitelistUserExpireAt', String(profile.expireTime));
                 }
@@ -118,6 +127,9 @@ export function Navbar({rightButtons}: NavbarProps) {
         localStorage.removeItem('whitelistUserName');
         localStorage.removeItem('whitelistUserGameId');
         localStorage.removeItem('whitelistUserQqNum');
+        localStorage.removeItem('whitelistUserRoleTitle');
+        localStorage.removeItem('whitelistUserRoleLevel');
+        localStorage.removeItem('whitelistUserCanInitiateVote');
         localStorage.removeItem('whitelistUserExpireAt');
         setUserName(null);
         setGameId(null);
@@ -206,6 +218,10 @@ export function Navbar({rightButtons}: NavbarProps) {
                                 <DropdownMenuItem onClick={() => router.push('/change-id')} className="cursor-pointer">
                                     <LayoutDashboard className="mr-2 h-4 w-4"/>
                                     <span>修改 ID</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => router.push('/vote')} className="cursor-pointer">
+                                    <LayoutDashboard className="mr-2 h-4 w-4"/>
+                                    <span>玩家投票</span>
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator/>
                                 <DropdownMenuItem onClick={handleLogout}

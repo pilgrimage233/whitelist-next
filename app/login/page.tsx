@@ -131,6 +131,18 @@ export default function LoginPage() {
                 if (profileData?.gameId) {
                     localStorage.setItem('whitelistUserGameId', profileData.gameId);
                 }
+                if (profileData?.qqNum) {
+                    localStorage.setItem('whitelistUserQqNum', profileData.qqNum);
+                }
+                if (profileData?.roleTitle) {
+                    localStorage.setItem('whitelistUserRoleTitle', profileData.roleTitle);
+                }
+                if (profileData?.roleLevel !== undefined && profileData?.roleLevel !== null) {
+                    localStorage.setItem('whitelistUserRoleLevel', String(profileData.roleLevel));
+                }
+                if (profileData?.canInitiateVote !== undefined && profileData?.canInitiateVote !== null) {
+                    localStorage.setItem('whitelistUserCanInitiateVote', String(profileData.canInitiateVote));
+                }
             } catch {
                 // Ignore profile caching failures and continue to profile page.
             }

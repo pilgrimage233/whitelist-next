@@ -7,13 +7,13 @@ import {Badge} from '@/components/ui/badge';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
+    AlertDialog,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
@@ -76,6 +76,15 @@ export default function ProfilePage() {
                 }
                 if (profileData?.qqNum) {
                     localStorage.setItem('whitelistUserQqNum', profileData.qqNum);
+                }
+                if (profileData?.roleTitle) {
+                    localStorage.setItem('whitelistUserRoleTitle', profileData.roleTitle);
+                }
+                if (profileData?.roleLevel !== undefined && profileData?.roleLevel !== null) {
+                    localStorage.setItem('whitelistUserRoleLevel', String(profileData.roleLevel));
+                }
+                if (profileData?.canInitiateVote !== undefined && profileData?.canInitiateVote !== null) {
+                    localStorage.setItem('whitelistUserCanInitiateVote', String(profileData.canInitiateVote));
                 }
                 if (profileData?.expireTime) {
                     localStorage.setItem('whitelistUserExpireAt', String(profileData.expireTime));
@@ -213,7 +222,13 @@ export default function ProfilePage() {
                                 <div className="text-center sm:text-left space-y-1">
                                     <div className="flex items-center gap-2 justify-center sm:justify-start">
                                         <h2 className="text-2xl font-bold">{profile?.userName || 'Loading...'}</h2>
-                                        <Badge className="bg-primary/20 text-primary border-primary/20">成员</Badge>
+                                        <Badge
+                                            className="bg-primary/20 text-primary border-primary/20">{profile?.roleTitle || '成员'}</Badge>
+                                        {profile?.canInitiateVote === 1 && (
+                                            <Badge variant="outline" className="border-emerald-500/30 text-emerald-600">
+                                                可发起投票
+                                            </Badge>
+                                        )}
                                     </div>
                                     <p className="text-muted-foreground font-mono text-sm">白名单ID: {profile?.whitelistId || '---'}</p>
                                     <div className="flex flex-wrap gap-2 mt-3 justify-center sm:justify-start">
@@ -293,6 +308,13 @@ export default function ProfilePage() {
                                     <div className="flex items-center gap-2">
                                         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"/>
                                         <span>已启用</span>
+                                    </div>
+                                </div>
+                                <div
+                                    className="p-4 rounded-xl bg-white/70 dark:bg-zinc-900/70 border border-border/40 space-y-1">
+                                    <Label className="text-xs text-muted-foreground">等级 / 头衔</Label>
+                                    <div className="font-mono text-lg">
+                                        Lv.{profile?.roleLevel || 1} · {profile?.roleTitle || '成员'}
                                     </div>
                                 </div>
                                 <div

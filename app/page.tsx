@@ -18,7 +18,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import {Activity, ArrowRight, CheckCircle2, Clock, Edit, RefreshCw, Server, Users, XCircle} from 'lucide-react';
+import {Activity, ArrowRight, CheckCircle2, Clock, Edit, RefreshCw, Server, Users, Vote, XCircle} from 'lucide-react';
 import type {WhitelistForm} from '@/lib/api';
 import {applyWhitelist, getOnlinePlayers} from '@/lib/api';
 import {Navbar} from '@/components/Navbar';
@@ -263,6 +263,15 @@ export default function Home() {
                                   <span className="font-semibold text-sm">查看成员</span>
                               </Button>
                               <Button variant="ghost"
+                                      className="h-auto py-6 flex flex-col gap-3 bg-white/40 dark:bg-black/20 border border-border/50 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:border-emerald-200 dark:hover:border-emerald-800 transition-all duration-300 group rounded-xl shadow-sm"
+                                      onClick={() => router.push('/vote')}>
+                                  <div
+                                      className="p-3 bg-emerald-100 dark:bg-emerald-900/50 rounded-full group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                                      <Vote className="h-5 w-5 text-emerald-600 dark:text-emerald-400"/>
+                                  </div>
+                                  <span className="font-semibold text-sm">玩家投票</span>
+                              </Button>
+                              <Button variant="ghost"
                                       className="col-span-2 h-auto py-4 flex flex-row items-center justify-between px-6 bg-white/40 dark:bg-black/20 border border-border/50 hover:bg-cyan-50 dark:hover:bg-cyan-900/20 hover:border-cyan-200 dark:hover:border-cyan-800 transition-all duration-300 group rounded-xl shadow-sm"
                                       onClick={() => router.push('/server-status2')}>
                                   <div className="flex items-center gap-3">
@@ -313,7 +322,7 @@ export default function Home() {
                                               暂无服务器信息
                                           </div>
                                       ) : (
-                                          displayedServers.map((server, index) => (
+                                          displayedServers.map((server) => (
                                               <div
                                                   key={server.name}
                                                   className="group space-y-3 p-4 bg-muted/40 hover:bg-muted/60 dark:bg-white/5 dark:hover:bg-white/10 rounded-xl transition-all duration-300 ring-1 ring-border/50"
