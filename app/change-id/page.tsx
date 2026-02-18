@@ -209,57 +209,58 @@ export default function ChangeIdPage() {
   const isLoggedIn = Boolean(loginToken);
 
   return (
-      <main
-          className="min-h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4 pt-24 pb-10">
+      <main className="min-h-screen relative w-full overflow-hidden bg-background">
+        <div className="absolute inset-0 animated-gradient opacity-40 -z-10" aria-hidden="true"/>
+        <div className="absolute inset-0 bg-[var(--theme-bg)] opacity-90 backdrop-blur-2xl -z-10" aria-hidden="true"/>
         <Navbar/>
 
-        <div className="max-w-xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="container relative mx-auto max-w-5xl px-4 pt-24 pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-cyan-600 inline-flex items-center gap-3">
-              <Edit className="h-8 w-8 text-indigo-600"/>
+            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary inline-flex items-center gap-3">
+              <Edit className="h-8 w-8 text-primary"/>
               更改游戏ID
             </h1>
             <p className="text-muted-foreground mt-2">安全便捷地修改您的白名单ID</p>
           </div>
 
-          <Card className="border-none shadow-2xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md overflow-hidden">
+          <Card className="border-none shadow-2xl bg-card/80 backdrop-blur-md overflow-hidden">
             <CardHeader
-                className="bg-gradient-to-r from-indigo-50/50 to-cyan-50/50 dark:from-indigo-900/10 dark:to-cyan-900/10 border-b border-gray-100 dark:border-gray-700/50 pb-6 pt-6">
+                className="bg-gradient-to-r from-primary/5 to-secondary/5 dark:from-primary/10 dark:to-secondary/10 border-b border-border/60 pb-6 pt-6">
               {/* 步骤条 */}
               <div className="flex items-center justify-center">
                 <div className="flex items-center gap-2">
                   <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-colors duration-300 ${
-                          step >= 1 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30' : 'bg-gray-200 text-gray-500'
+                          step >= 1 ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30' : 'bg-muted text-muted-foreground'
                       }`}>
                     1
                   </div>
                   <span
-                      className={`text-sm font-medium ${step >= 1 ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-400'}`}>信息</span>
+                      className={`text-sm font-medium ${step >= 1 ? 'text-primary' : 'text-muted-foreground'}`}>信息</span>
                 </div>
                 <div
-                    className={`w-12 h-1 mx-2 rounded-full transition-colors duration-300 ${step >= 2 ? 'bg-indigo-600' : 'bg-gray-200'}`}/>
+                    className={`w-12 h-1 mx-2 rounded-full transition-colors duration-300 ${step >= 2 ? 'bg-primary' : 'bg-muted'}`}/>
                 <div className="flex items-center gap-2">
                   <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-colors duration-300 ${
-                          step >= 2 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30' : 'bg-gray-200 text-gray-500'
+                          step >= 2 ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30' : 'bg-muted text-muted-foreground'
                       }`}>
                     2
                   </div>
                   <span
-                      className={`text-sm font-medium ${step >= 2 ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-400'}`}>验证</span>
+                      className={`text-sm font-medium ${step >= 2 ? 'text-primary' : 'text-muted-foreground'}`}>验证</span>
                 </div>
                 <div
-                    className={`w-12 h-1 mx-2 rounded-full transition-colors duration-300 ${step >= 3 ? 'bg-indigo-600' : 'bg-gray-200'}`}/>
+                    className={`w-12 h-1 mx-2 rounded-full transition-colors duration-300 ${step >= 3 ? 'bg-primary' : 'bg-muted'}`}/>
                 <div className="flex items-center gap-2">
                   <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-colors duration-300 ${
-                          step >= 3 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30' : 'bg-gray-200 text-gray-500'
+                          step >= 3 ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30' : 'bg-muted text-muted-foreground'
                       }`}>
                     3
                   </div>
                   <span
-                      className={`text-sm font-medium ${step >= 3 ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-400'}`}>完成</span>
+                      className={`text-sm font-medium ${step >= 3 ? 'text-primary' : 'text-muted-foreground'}`}>完成</span>
                 </div>
               </div>
             </CardHeader>
@@ -309,7 +310,7 @@ export default function ChangeIdPage() {
                         重置
                       </Button>
                       <Button type="submit"
-                              className="flex-1 bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white shadow-md transition-all hover:shadow-lg"
+                              className="flex-1 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground shadow-md transition-all hover:shadow-lg"
                               disabled={loading}>
                         {loading ? (
                             <>
@@ -389,7 +390,7 @@ export default function ChangeIdPage() {
                       重置
                     </Button>
                     <Button type="submit"
-                            className="flex-1 bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white shadow-md transition-all hover:shadow-lg"
+                            className="flex-1 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground shadow-md transition-all hover:shadow-lg"
                             disabled={loading}>
                     {loading ? (
                         <>
@@ -407,13 +408,13 @@ export default function ChangeIdPage() {
             {step === 2 && (
                 <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                   <div
-                      className="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-800/30 flex items-start gap-3">
-                    <div className="p-2 bg-indigo-100 dark:bg-indigo-800/30 rounded-full">
-                      <Mail className="h-5 w-5 text-indigo-600 dark:text-indigo-400"/>
+                      className="bg-primary/10 p-4 rounded-xl border border-primary/20 flex items-start gap-3 text-primary">
+                    <div className="p-2 bg-primary/[0.15] rounded-full">
+                      <Mail className="h-5 w-5 text-primary"/>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-indigo-900 dark:text-indigo-300">验证码已发送</h4>
-                      <p className="text-sm text-indigo-700/80 dark:text-indigo-300/80 mt-1">
+                      <h4 className="font-semibold">验证码已发送</h4>
+                      <p className="text-sm text-primary/80 mt-1">
                         我们已向 <span className="font-mono font-medium">{requestForm.qqNum}@qq.com</span> 发送了验证码，请查收。
                       </p>
                   </div>
@@ -448,7 +449,7 @@ export default function ChangeIdPage() {
                         返回
                       </Button>
                       <Button type="submit"
-                              className="flex-1 bg-gradient-to-r from-indigo-500 to-cyan-500 hover:from-indigo-600 hover:to-cyan-600 text-white shadow-md transition-all hover:shadow-lg"
+                              className="flex-1 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground shadow-md transition-all hover:shadow-lg"
                               disabled={loading}>
                       {loading ? (
                           <>
