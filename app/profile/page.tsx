@@ -22,6 +22,10 @@ import {changeWhitelistUserPassword, checkMemberDetail, getWhitelistUserProfile}
 import {cn} from '@/lib/utils';
 
 const TOKEN_KEY = 'whitelistUserToken';
+const DEMO_LOGIN_ENABLED = ['1', 'true', 'yes', 'on'].includes(
+    (process.env.NEXT_PUBLIC_WHITELIST_DEMO_ENABLED || '').toLowerCase()
+);
+const DEMO_LOGIN_USER_NAME = (process.env.NEXT_PUBLIC_WHITELIST_DEMO_USERNAME || '').trim();
 
 type AlertState = {
     message: string;
@@ -39,6 +43,9 @@ export default function ProfilePage() {
     const [pwdLoading, setPwdLoading] = useState(false);
     const [avatarError, setAvatarError] = useState(false);
     const [avatarMode, setAvatarMode] = useState<'mc' | 'qq' | 'initial'>('mc');
+    const isDemoAccount = DEMO_LOGIN_ENABLED
+        && Boolean(DEMO_LOGIN_USER_NAME)
+        && String(profile?.userName || '').toLowerCase() === DEMO_LOGIN_USER_NAME.toLowerCase();
 
     const showAlert = (message: string, type: 'success' | 'error') => {
         setAlert({message, type});
@@ -119,6 +126,10 @@ export default function ProfilePage() {
     const handleChangePassword = async (e: React.FormEvent) => {
         e.preventDefault();
         resetAlert();
+        if (isDemoAccount) {
+            showAlert('演示账户不允许修改密码', 'error');
+            return;
+        }
         if (!token) {
             showAlert('请先登录', 'error');
             return;
@@ -361,12 +372,19 @@ export default function ProfilePage() {
                                     </div>
                                 )}
                                 <form onSubmit={handleChangePassword} className="space-y-3">
+                                    {isDemoAccount && (
+                                        <div
+                                            className="text-xs p-2 rounded border bg-amber-50 border-amber-200 text-amber-700">
+                                            当前为演示账户，已禁用密码修改。
+                                        </div>
+                                    )}
                                     <div className="space-y-1">
                                         <Label className="text-xs ml-1 text-muted-foreground">当前密码</Label>
                                         <Input
                                             type="password"
                                             className="h-10 text-sm bg-white/50 dark:bg-zinc-800/50"
                                             value={pwdForm.oldPassword}
+                                            disabled={isDemoAccount}
                                             onChange={(e) => setPwdForm({...pwdForm, oldPassword: e.target.value})}
                                         />
                                     </div>
@@ -376,6 +394,7 @@ export default function ProfilePage() {
                                             type="password"
                                             className="h-10 text-sm bg-white/50 dark:bg-zinc-800/50"
                                             value={pwdForm.newPassword}
+                                            disabled={isDemoAccount}
                                             onChange={(e) => setPwdForm({...pwdForm, newPassword: e.target.value})}
                                         />
                                     </div>
@@ -385,10 +404,12 @@ export default function ProfilePage() {
                                             type="password"
                                             className="h-10 text-sm bg-white/50 dark:bg-zinc-800/50"
                                             value={pwdForm.confirmPassword}
+                                            disabled={isDemoAccount}
                                             onChange={(e) => setPwdForm({...pwdForm, confirmPassword: e.target.value})}
                                         />
                                     </div>
-                                    <Button type="submit" disabled={pwdLoading} className="w-full mt-2 h-10 text-sm">
+                                    <Button type="submit" disabled={pwdLoading || isDemoAccount}
+                                            className="w-full mt-2 h-10 text-sm">
                                         {pwdLoading ? <Loader2 className="w-3 h-3 animate-spin mr-2"/> : '修改密码'}
                                     </Button>
                                 </form>

@@ -13,6 +13,12 @@ import {Navbar} from '@/components/Navbar';
 import {cn} from '@/lib/utils';
 
 const TOKEN_KEY = 'whitelistUserToken';
+const DEMO_LOGIN_ENABLED = ['1', 'true', 'yes', 'on'].includes(
+    (process.env.NEXT_PUBLIC_WHITELIST_DEMO_ENABLED || '').toLowerCase()
+);
+const DEMO_LOGIN_USER_NAME = (process.env.NEXT_PUBLIC_WHITELIST_DEMO_USERNAME || '').trim();
+const DEMO_LOGIN_PASSWORD = process.env.NEXT_PUBLIC_WHITELIST_DEMO_PASSWORD || '';
+const HAS_DEMO_LOGIN_CONFIG = DEMO_LOGIN_ENABLED && Boolean(DEMO_LOGIN_USER_NAME) && Boolean(DEMO_LOGIN_PASSWORD);
 
 type Step = 'sendCode' | 'register' | 'login';
 
@@ -23,7 +29,7 @@ type AlertState = {
 
 export default function LoginPage() {
     const router = useRouter();
-    const [step, setStep] = useState<Step>('sendCode');
+    const [step, setStep] = useState<Step>(HAS_DEMO_LOGIN_CONFIG ? 'login' : 'sendCode');
     const [alert, setAlert] = useState<AlertState>({message: '', type: ''});
     const [loading, setLoading] = useState(false);
 
@@ -35,7 +41,10 @@ export default function LoginPage() {
         password: '',
         confirmPassword: ''
     });
-    const [loginForm, setLoginForm] = useState({userName: '', password: ''});
+    const [loginForm, setLoginForm] = useState({
+        userName: HAS_DEMO_LOGIN_CONFIG ? DEMO_LOGIN_USER_NAME : '',
+        password: HAS_DEMO_LOGIN_CONFIG ? DEMO_LOGIN_PASSWORD : ''
+    });
 
     const showAlert = (message: string, type: 'success' | 'error') => {
         setAlert({message, type});
@@ -44,6 +53,11 @@ export default function LoginPage() {
     const resetAlert = () => setAlert({message: '', type: ''});
 
     useEffect(() => {
+        if (HAS_DEMO_LOGIN_CONFIG) {
+            setStep('login');
+            setLoginForm({userName: DEMO_LOGIN_USER_NAME, password: DEMO_LOGIN_PASSWORD});
+            return;
+        }
         const hasAccount = typeof window !== 'undefined' ? localStorage.getItem('whitelistUserHasAccount') : null;
         if (hasAccount) {
             setStep('login');
