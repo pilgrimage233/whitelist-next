@@ -241,7 +241,7 @@ export default function ServerStatus2Page() {
                   {/* 指标 */}
                   <div
                       className="flex items-center justify-between p-3 bg-secondary/10 rounded-lg border border-secondary/30">
-                    <span className="text-xs font-medium text-muted-foreground">服务指标</span>
+                      <span className="text-xs font-medium text-muted-foreground">指标</span>
                     <Badge variant={getIndicatorColor(server['指标']) as any} className="text-xs font-semibold">
                       {server['指标']}
                     </Badge>
