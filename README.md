@@ -227,7 +227,8 @@ POST /api/v1/whitelist-user/privacy
 
 ```bash
 docker build -t whitelist-next .
-docker run -p 3000:3000 whitelist-next
+# 加载环境变量运行，示例使用本地 .env.local
+docker run -p 3000:3000 --env-file .env.local whitelist-next
 ```
 
 ## License
