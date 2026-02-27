@@ -21,6 +21,11 @@ import type {ChangeIdRequest} from '@/lib/api';
 import {changeWhitelistUserGameId, confirmChangeId, getWhitelistUserProfile, requestChangeId} from '@/lib/api';
 import {Navbar} from '@/components/Navbar';
 
+const DEMO_LOGIN_ENABLED = ['1', 'true', 'yes', 'on'].includes(
+    (process.env.NEXT_PUBLIC_WHITELIST_DEMO_ENABLED || '').toLowerCase()
+);
+const DEMO_LOGIN_USER_NAME = (process.env.NEXT_PUBLIC_WHITELIST_DEMO_USERNAME || '').trim();
+
 export default function ChangeIdPage() {
   const router = useRouter();
   const [step, setStep] = useState(1); // 1: 填写信息, 2: 验证码, 3: 完成
@@ -31,6 +36,7 @@ export default function ChangeIdPage() {
   const [alertType, setAlertType] = useState<'success' | 'error'>('success');
   const [loginToken, setLoginToken] = useState<string | null>(null);
   const [loginGameId, setLoginGameId] = useState<string | null>(null);
+  const [loginUserName, setLoginUserName] = useState<string | null>(null);
 
   const [requestForm, setRequestForm] = useState<ChangeIdRequest>({
     oldUserName: '',
@@ -48,15 +54,24 @@ export default function ChangeIdPage() {
     }
     setLoginToken(token);
     const cachedGameId = localStorage.getItem('whitelistUserGameId');
+    const cachedUserName = localStorage.getItem('whitelistUserName');
     if (cachedGameId) {
       setLoginGameId(cachedGameId);
+    }
+    if (cachedUserName) {
+      setLoginUserName(cachedUserName);
     }
     getWhitelistUserProfile(token)
         .then((res) => {
           const gameId = res.data?.gameId || null;
+          const userName = res.data?.userName || null;
           if (gameId) {
             localStorage.setItem('whitelistUserGameId', gameId);
             setLoginGameId(gameId);
+          }
+          if (userName) {
+            localStorage.setItem('whitelistUserName', userName);
+            setLoginUserName(userName);
           }
         })
         .catch(() => {
@@ -173,6 +188,10 @@ export default function ChangeIdPage() {
       showAlert('请先登录', 'error');
       return;
     }
+    if (isDemoAccount) {
+      showAlert('演示账户不允许修改游戏ID', 'error');
+      return;
+    }
     if (!requestForm.newUserName) {
       showAlert('请输入新的游戏ID', 'error');
       return;
@@ -207,6 +226,9 @@ export default function ChangeIdPage() {
   };
 
   const isLoggedIn = Boolean(loginToken);
+  const isDemoAccount = DEMO_LOGIN_ENABLED
+      && Boolean(DEMO_LOGIN_USER_NAME)
+      && String(loginUserName || '').toLowerCase() === DEMO_LOGIN_USER_NAME.toLowerCase();
 
   return (
       <main className="min-h-screen relative w-full overflow-hidden bg-background">
@@ -268,9 +290,16 @@ export default function ChangeIdPage() {
               {step === 1 && isLoggedIn && (
                   <form onSubmit={handleDirectChange}
                         className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-                    <div className="rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 text-sm p-3">
-                      已登录，可直接更改游戏ID，无需验证码。
-                    </div>
+                    {isDemoAccount && (
+                        <div className="rounded-xl border border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-300 text-sm p-3">
+                          当前为演示账户，已禁用游戏ID修改功能。
+                        </div>
+                    )}
+                    {!isDemoAccount && (
+                        <div className="rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 text-sm p-3">
+                          已登录，可直接更改游戏ID，无需验证码。
+                        </div>
+                    )}
                     <div className="space-y-2">
                       <Label className="text-sm font-medium">当前游戏ID</Label>
                       <Input
@@ -290,6 +319,7 @@ export default function ChangeIdPage() {
                             onChange={(e) => setRequestForm({...requestForm, newUserName: e.target.value})}
                             maxLength={35}
                             className="pl-9 bg-white/50 dark:bg-gray-900/50"
+                            disabled={isDemoAccount}
                         />
                       </div>
                     </div>
@@ -302,16 +332,17 @@ export default function ChangeIdPage() {
                           onChange={(e) => setRequestForm({...requestForm, changeReason: e.target.value})}
                           maxLength={500}
                           className="min-h-[80px] resize-none bg-white/50 dark:bg-gray-900/50"
+                          disabled={isDemoAccount}
                       />
                     </div>
 
                     <div className="flex gap-4 pt-2">
-                      <Button type="button" variant="ghost" onClick={handleReset} className="w-24">
+                      <Button type="button" variant="ghost" onClick={handleReset} className="w-24" disabled={isDemoAccount}>
                         重置
                       </Button>
                       <Button type="submit"
                               className="flex-1 bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground shadow-md transition-all hover:shadow-lg"
-                              disabled={loading}>
+                              disabled={loading || isDemoAccount}>
                         {loading ? (
                             <>
                               <Loader2 className="mr-2 h-4 w-4 animate-spin"/>

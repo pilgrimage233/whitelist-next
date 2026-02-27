@@ -23,6 +23,13 @@ import type {WhitelistForm} from '@/lib/api';
 import {applyWhitelist, getOnlinePlayers} from '@/lib/api';
 import {Navbar} from '@/components/Navbar';
 
+const DEMO_LOGIN_ENABLED = ['1', 'true', 'yes', 'on'].includes(
+    (process.env.NEXT_PUBLIC_WHITELIST_DEMO_ENABLED || '').toLowerCase()
+);
+const DEMO_LOGIN_USER_NAME = (process.env.NEXT_PUBLIC_WHITELIST_DEMO_USERNAME || '').trim();
+const DEMO_LOGIN_PASSWORD = process.env.NEXT_PUBLIC_WHITELIST_DEMO_PASSWORD || '';
+const HAS_DEMO_LOGIN_CONFIG = DEMO_LOGIN_ENABLED && Boolean(DEMO_LOGIN_USER_NAME) && Boolean(DEMO_LOGIN_PASSWORD);
+
 interface ServerStatus {
   name: string;
   playerCount: number;
@@ -131,6 +138,25 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-6xl mx-auto">
                   {/* 左侧主要内容区 */}
                   <div className="lg:col-span-7 xl:col-span-8 space-y-8">
+                      {/* 演示功能提示 */}
+                      {HAS_DEMO_LOGIN_CONFIG && (
+                          <div className="animate-in-up rounded-xl border border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-900/20 p-4">
+                              <div className="flex items-start gap-3">
+                                  <div className="p-2 bg-blue-100 dark:bg-blue-800/50 rounded-full flex-shrink-0">
+                                      <Activity className="h-4 w-4 text-blue-600 dark:text-blue-400"/>
+                                  </div>
+                                  <div className="flex-1">
+                                      <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
+                                          演示模式
+                                      </h3>
+                                      <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+                                          当前系统已启用演示功能。您可以使用演示账户（用户名: <span className="font-mono font-semibold">{DEMO_LOGIN_USER_NAME}</span>，密码: <span className="font-mono font-semibold">{DEMO_LOGIN_PASSWORD}</span>）登录体验系统功能。演示账户部分功能受限，无法修改密码和游戏ID。
+                                      </p>
+                                  </div>
+                              </div>
+                          </div>
+                      )}
+
                       {/* 欢迎语 */}
                       <div className="animate-in-up space-y-4">
                           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600 dark:to-blue-400">
